@@ -18,7 +18,6 @@ class ofApp : public ofBaseApp{
         int bpm;
         int bufferSize;
         int sampleRate;
-        int maxHoldTime;
         float azimuth;
     
         bool hrtfOn;

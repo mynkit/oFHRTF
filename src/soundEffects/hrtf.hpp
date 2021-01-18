@@ -14,7 +14,6 @@
 class hrtf {
 
     public:
-        int maxHoldTime;
         vector<float> buffer;
         int size;
         int sampleRate;
@@ -22,7 +21,7 @@ class hrtf {
         vector<vector<float>> hrtfValuesL;
         vector<vector<float>> hrtfValuesR;
     
-        hrtf(float _maxHoldTime, int _sampleRate);
+        hrtf(int _size, int _sampleRate);
         ~hrtf();
         void feed(float sample);
         float getSample(float& sampleL, float& sampleR, int azimuth);

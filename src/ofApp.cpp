@@ -2,7 +2,6 @@
 
 #define BUFFERSIZE 256; // バッファサイズ(256推奨．大きくすると処理に余裕はでるが遅延が長くなる)
 #define SAMPLERATE 44100; // サンプルレート(Hz)
-#define MAXHOLDTIME 20; // 音をメモリに保持する最大秒数(ms)
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -10,7 +9,6 @@ void ofApp::setup(){
     // audio setting
     bufferSize = BUFFERSIZE;
     sampleRate = SAMPLERATE;
-    maxHoldTime = MAXHOLDTIME;
     azimuth = 0;
     
     inputBuffer.resize(bufferSize);
@@ -24,7 +22,7 @@ void ofApp::setup(){
     sound_stream.setup(soundSettings);
     
     
-    myHrtf = new hrtf(maxHoldTime, sampleRate);
+    myHrtf = new hrtf(512, sampleRate);
     hrtfOn = true;
 
 }
@@ -50,7 +48,7 @@ void ofApp::audioIn(ofSoundBuffer &buffer){
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &buffer){
     const int frames = buffer.getNumFrames();
-     azimuth += 0.1;
+     azimuth += 0.5;
      if(azimuth>360){azimuth=0;}
     for(int i = 0; i < frames; i++){
         const int channels = buffer.getNumChannels();

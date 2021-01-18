@@ -7,13 +7,11 @@
 
 #include "soundEffects/hrtf.hpp"
 
-hrtf::hrtf(float _maxHoldTime, int _sampleRate) {
-    //! 最大保持時間(ms)
-    maxHoldTime = _maxHoldTime;
+hrtf::hrtf(int _size, int _sampleRate) {
     //! サンプルレート
     sampleRate = _sampleRate;
     //! 保持されている音のサンプルサイズ
-    size = maxHoldTime * 0.001 * _sampleRate; // HRTFデータセットのサイズが512なので、maxHoldTimeを指定する必要は本来ない
+    size = _size;
     //! バッファ
     buffer.resize(size);
     for (int i = 0; i < buffer.size(); i++) {
@@ -50,14 +48,12 @@ float hrtf::getSample(float& sampleL, float& sampleR, int azimuth) {
     sampleR = 0.;
     for (int i = 0; i <  hrtfValuesL[index].size(); i++) {
         delayTime = i * 1000. / 44100.;
-        if (delayTime > maxHoldTime) {
-            // 保持用バッファの時間よりもディレイタイムが長い場合は破棄する
-            break;
-        }
         point = originalSamplePoint + size - (delayTime*0.001*sampleRate) - 1;
         if(point >= size){point -= size;}
-        sampleL += buffer[point] * hrtfValuesL[index][i];
-        sampleR += buffer[point] * hrtfValuesR[index][i];
+        if (buffer[point] != 0) {
+            sampleL += buffer[point] * hrtfValuesL[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
+            sampleR += buffer[point] * hrtfValuesR[index][i] * 3.;
+        }
     }
 }
 
