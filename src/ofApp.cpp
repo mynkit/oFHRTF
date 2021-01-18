@@ -55,6 +55,7 @@ void ofApp::draw(){
     // 球
     microphone.drawWireframe();
     // 円(球の軌道)
+    ofNoFill();
     ofDrawCircle(0, 0, 0, 200);
     cam.end();
 }
@@ -70,8 +71,8 @@ void ofApp::audioIn(ofSoundBuffer &buffer){
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &buffer){
     const int frames = buffer.getNumFrames();
-     azimuth += 0.5;
-     if(azimuth>360){azimuth=0;}
+    azimuth += 0.5;
+    if(azimuth>360){azimuth=0;}
     for(int i = 0; i < frames; i++){
         const int channels = buffer.getNumChannels();
         float currentSample = inputBuffer[i];

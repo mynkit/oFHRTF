@@ -32,38 +32,31 @@ hrtf::hrtf(int _size, int _sampleRate) {
         std::string filePathR = "hrtfs/elev0/R0e" + sout.str() + "a.dat";
         ofBuffer fileBufferL = ofBufferFromFile(filePathL);
         ofBuffer fileBufferR = ofBufferFromFile(filePathR);
-        hrtfValuesL[i].resize(size);
-        hrtfValuesR[i].resize(size);
+//        hrtfValuesL[i].resize(size);
+//        hrtfValuesR[i].resize(size);
         string _textL = fileBufferL.getText();
         hrtfValuesL[i] = splitString(_textL, '\n');
         string _textR = fileBufferR.getText();
         hrtfValuesR[i] = splitString(_textR, '\n');
-        for (int j = 0; j < hrtfValuesL[i].size(); j++) {
-            if ( !(hrtfValuesL[i][j]>0) || !(hrtfValuesL[i][j]<0)) {
-                hrtfValuesL[i][j] = 0.;
-            }
-            if ( !(hrtfValuesR[i][j]>0) || !(hrtfValuesR[i][j]<0)) {
-                hrtfValuesR[i][j] = 0.;
-            }
-        }
+        hrtfValuesL[i].resize(size);
+        hrtfValuesR[i].resize(size);
     }
 
 }
 
 float hrtf::getSample(float& sampleL, float& sampleR, int azimuth) {
     int index = azimuth / 5;
+    if (index == 72) { index = 0; }
     float delayTime; // 単位はms
     int point;
     sampleL = 0.;
     sampleR = 0.;
-    for (int i = 0; i <  hrtfValuesL[index].size(); i++) {
+    for (int i = 0; i < size; i++) {
         delayTime = i * 1000. / 44100.;
         point = originalSamplePoint + size - (delayTime*0.001*sampleRate) - 1;
         if(point >= size){point -= size;}
-        if (buffer[point] != 0) {
-            sampleL += buffer[point] * hrtfValuesL[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
-            sampleR += buffer[point] * hrtfValuesR[index][i] * 3.;
-        }
+        sampleL += buffer[point] * hrtfValuesL[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
+        sampleR += buffer[point] * hrtfValuesR[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
     }
 }
 
