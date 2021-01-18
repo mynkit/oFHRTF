@@ -1,0 +1,7 @@
+/bin/ofHRTF.app/
+bin/ofHRTFDebug.app/
+/obj/
+/.vscode/
+*.DS_Store
+*.csv
+hrtfs/
