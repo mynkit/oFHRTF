@@ -38,6 +38,14 @@ hrtf::hrtf(int _size, int _sampleRate) {
         hrtfValuesL[i] = splitString(_textL, '\n');
         string _textR = fileBufferR.getText();
         hrtfValuesR[i] = splitString(_textR, '\n');
+        for (int j = 0; j < hrtfValuesL[i].size(); j++) {
+            if ( !(hrtfValuesL[i][j]>0) || !(hrtfValuesL[i][j]<0)) {
+                hrtfValuesL[i][j] = 0.;
+            }
+            if ( !(hrtfValuesR[i][j]>0) || !(hrtfValuesR[i][j]<0)) {
+                hrtfValuesR[i][j] = 0.;
+            }
+        }
     }
 
 }

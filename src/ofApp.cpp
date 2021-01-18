@@ -54,6 +54,8 @@ void ofApp::draw(){
     soundSource.draw();
     // 球
     microphone.drawWireframe();
+    // 円(球の軌道)
+    ofDrawCircle(0, 0, 0, 200);
     cam.end();
 }
 
