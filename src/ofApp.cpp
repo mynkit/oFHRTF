@@ -32,8 +32,8 @@ void ofApp::setup(){
     microphone.set(50, 16);
     microphone.setPosition(200, 0, 0);
     // カメラ
-    const float cameraPositionX = - 200;
-    const float cameraPositionY = 200;
+    const float cameraPositionX = -100;
+    const float cameraPositionY = 300;
     const float cameraPositionZ = 200;
     cam.setPosition(cameraPositionX, cameraPositionY, cameraPositionZ);
     cam.lookAt(ofVec3f(-cameraPositionX, -cameraPositionY, -cameraPositionZ), ofVec3f(0, 0, 1));
@@ -53,6 +53,7 @@ void ofApp::draw(){
     // 立方体
     soundSource.draw();
     // 球
+    microphone.setPosition(200 * sin(M_PI * azimuth / 180), 200 * cos(M_PI * azimuth / 180), 0);
     microphone.drawWireframe();
     // 円(球の軌道)
     ofNoFill();
