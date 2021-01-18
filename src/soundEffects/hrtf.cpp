@@ -32,6 +32,8 @@ hrtf::hrtf(int _size, int _sampleRate) {
         std::string filePathR = "hrtfs/elev0/R0e" + sout.str() + "a.dat";
         ofBuffer fileBufferL = ofBufferFromFile(filePathL);
         ofBuffer fileBufferR = ofBufferFromFile(filePathR);
+        hrtfValuesL[i].resize(size);
+        hrtfValuesR[i].resize(size);
         string _textL = fileBufferL.getText();
         hrtfValuesL[i] = splitString(_textL, '\n');
         string _textR = fileBufferR.getText();

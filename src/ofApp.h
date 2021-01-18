@@ -35,5 +35,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         hrtf* myHrtf;
-		
+    private:
+        ofBoxPrimitive soundSource;
+        ofSpherePrimitive microphone;
+        ofCamera cam;
 };

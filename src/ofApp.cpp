@@ -24,7 +24,19 @@ void ofApp::setup(){
     
     myHrtf = new hrtf(512, sampleRate);
     hrtfOn = true;
-
+    
+    // 立方体
+    soundSource.set(50);
+    soundSource.setPosition(0, 0, 0);
+    // 球
+    microphone.set(50, 16);
+    microphone.setPosition(200, 0, 0);
+    // カメラ
+    const float cameraPositionX = - 200;
+    const float cameraPositionY = 200;
+    const float cameraPositionZ = 200;
+    cam.setPosition(cameraPositionX, cameraPositionY, cameraPositionZ);
+    cam.lookAt(ofVec3f(-cameraPositionX, -cameraPositionY, -cameraPositionZ), ofVec3f(0, 0, 1));
 }
 
 //--------------------------------------------------------------
@@ -34,7 +46,15 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    // 座標系を移動
+    ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
+    cam.begin();
+    ofSetColor(255);
+    // 立方体
+    soundSource.draw();
+    // 球
+    microphone.drawWireframe();
+    cam.end();
 }
 
 //--------------------------------------------------------------
