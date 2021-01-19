@@ -6,7 +6,7 @@
 ## Environment
 
 ```
-macOS Cataline
+macOS Catalina
 openFrameworks v0.11.0
 ```
 
