@@ -55,8 +55,8 @@ float hrtf::getSample(float& sampleL, float& sampleR, int azimuth) {
         delayTime = i * 1000. / 44100.;
         point = originalSamplePoint + size - (delayTime*0.001*sampleRate) - 1;
         if(point >= size){point -= size;}
-        sampleL += buffer[point] * hrtfValuesL[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
-        sampleR += buffer[point] * hrtfValuesR[index][i] * 3.; // 音が原音に比べて小さすぎるので3倍する
+        sampleL += buffer[point] * hrtfValuesL[index][i] * 5.; // 音が原音に比べて小さすぎるので5倍する
+        sampleR += buffer[point] * hrtfValuesR[index][i] * 5.; // 音が原音に比べて小さすぎるので5倍する
     }
 }
 
