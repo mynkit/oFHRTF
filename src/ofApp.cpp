@@ -82,7 +82,6 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
     if (index - (int)index < 0.01) {
         // indexが整数になるタイミングでhrtfDataIndexを0~76のどれか(乱数)にする
         hrtfDataIndex = ofRandom(0, 76);
-        cout << hrtfDataIndex << endl;
     }
     
     for(int i = 0; i < frames; i++){
