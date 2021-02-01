@@ -22,7 +22,7 @@ void ofApp::setup(){
     sound_stream.setup(soundSettings);
     
     
-    myHrtf = new hrtf(512, sampleRate);
+    myHrtf2D = new hrtf2D(512, sampleRate);
     hrtfOn = true;
     
     // 立方体
@@ -82,8 +82,8 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
         float currentSampleR = currentSample;
         if (hrtfOn) {
             // inputの音をそのまま保持用バッファにいれる
-            myHrtf->feed(currentSample);
-            myHrtf->getSample(currentSampleL, currentSampleR, (int)azimuth);
+            myHrtf2D->feed(currentSample);
+            myHrtf2D->getSample(currentSampleL, currentSampleR, (int)azimuth);
         }
         buffer[i*channels+0] = currentSampleL;
         buffer[i*channels+1] = currentSampleR;

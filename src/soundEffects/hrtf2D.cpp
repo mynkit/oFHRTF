@@ -5,9 +5,9 @@
 //  Created by keita miyano on 2021/01/17.
 //
 
-#include "soundEffects/hrtf.hpp"
+#include "soundEffects/hrtf2D.hpp"
 
-hrtf::hrtf(int _size, int _sampleRate) {
+hrtf2D::hrtf2D(int _size, int _sampleRate) {
     //! サンプルレート
     sampleRate = _sampleRate;
     //! 保持されている音のサンプルサイズ
@@ -42,7 +42,7 @@ hrtf::hrtf(int _size, int _sampleRate) {
 
 }
 
-float hrtf::getSample(float& sampleL, float& sampleR, int azimuth) {
+float hrtf2D::getSample(float& sampleL, float& sampleR, int azimuth) {
     int index = azimuth / 5;
     if (index == 72) { index = 0; }
     float delayTime; // 単位はms
@@ -59,7 +59,7 @@ float hrtf::getSample(float& sampleL, float& sampleR, int azimuth) {
 }
 
 // sampleを保持用バッファにいれていく
-void hrtf::feed(float sample) {
+void hrtf2D::feed(float sample) {
     buffer[originalSamplePoint] = sample;
     originalSamplePoint++;
     // indexがバッファサイズを超えたら0に戻す
@@ -67,7 +67,7 @@ void hrtf::feed(float sample) {
 }
 
 //文字列delimiterでspitしてvector配列を返すメソッド(文字列を全てfloatに変換する)
-vector<float> hrtf::splitString(string& input, char delimiter) {
+vector<float> hrtf2D::splitString(string& input, char delimiter) {
     istringstream stream(input);
     string field;
     vector<float> result;

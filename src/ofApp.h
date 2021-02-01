@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "soundEffects/hrtf.hpp"
+#include "soundEffects/hrtf2D.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -34,7 +34,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        hrtf* myHrtf;
+        hrtf2D* myHrtf2D;
     private:
         ofBoxPrimitive soundSource;
         ofSpherePrimitive microphone;

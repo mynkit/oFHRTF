@@ -10,7 +10,7 @@
 #include "ofMain.h"
 
 
-class hrtf {
+class hrtf2D {
 
     public:
         vector<float> buffer;
@@ -20,8 +20,8 @@ class hrtf {
         vector<vector<float>> hrtfValuesL;
         vector<vector<float>> hrtfValuesR;
     
-        hrtf(int _size, int _sampleRate);
-        ~hrtf();
+        hrtf2D(int _size, int _sampleRate);
+        ~hrtf2D();
         void feed(float sample);
         float getSample(float& sampleL, float& sampleR, int azimuth);
     
