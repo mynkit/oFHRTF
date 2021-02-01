@@ -19,7 +19,8 @@ class ofApp : public ofBaseApp{
         int bpm;
         int bufferSize;
         int sampleRate;
-        float hrtfDataIndex;
+        int hrtfDataIndex;
+        float index;
     
         bool hrtfOn;
 

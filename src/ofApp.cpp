@@ -24,6 +24,7 @@ void ofApp::setup(){
     // myHrtf2D = new hrtf2D(512, sampleRate);
     myHrtf3D = new hrtf3D(512, sampleRate);
     hrtfDataIndex = 0;
+    index = 0.;
     hrtfOn = true;
     
     // 立方体
@@ -38,6 +39,7 @@ void ofApp::setup(){
     const float cameraPositionZ = 200;
     cam.setPosition(cameraPositionX, cameraPositionY, cameraPositionZ);
     cam.lookAt(ofVec3f(-cameraPositionX, -cameraPositionY, -cameraPositionZ), ofVec3f(0, 0, 1));
+    
 }
 
 //--------------------------------------------------------------
@@ -75,7 +77,13 @@ void ofApp::audioIn(ofSoundBuffer &buffer){
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &buffer){
     const int frames = buffer.getNumFrames();
-    hrtfDataIndex += 0.01;
+    index += 0.01;
+    if(index>10){index=0;}
+    if (index - (int)index < 0.01) {
+        // indexが整数になるタイミングでhrtfDataIndexを0~76のどれか(乱数)にする
+        hrtfDataIndex = ofRandom(0, 76);
+        cout << hrtfDataIndex << endl;
+    }
     
     for(int i = 0; i < frames; i++){
         const int channels = buffer.getNumChannels();
@@ -86,7 +94,7 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
         if (hrtfOn) {
             // inputの音をそのまま保持用バッファにいれる
             myHrtf3D->feed(currentSample);
-            myHrtf3D->getSample(currentSampleL, currentSampleR, (int)hrtfDataIndex);
+            myHrtf3D->getSample(currentSampleL, currentSampleR, hrtfDataIndex);
         }
         buffer[i*channels+0] = currentSampleL;
         buffer[i*channels+1] = currentSampleR;
