@@ -1,8 +1,8 @@
 //
-//  hrtf2D.hpp
+//  hrtf3D.hpp
 //  oFHRTF
 //
-//  Created by keita miyano on 2021/01/17.
+//  Created by keita miyano on 2021/02/01.
 //
 
 #pragma once
@@ -10,7 +10,7 @@
 #include "ofMain.h"
 
 
-class hrtf2D {
+class hrtf3D {
 
     public:
         vector<float> buffer;
@@ -19,11 +19,14 @@ class hrtf2D {
         int originalSamplePoint;
         vector<vector<float>> hrtfValuesL;
         vector<vector<float>> hrtfValuesR;
-    
-        hrtf2D(int size, int sampleRate);
-        ~hrtf2D();
+        vector<int> elevs;
+        vector<int> azimuths;
+        hrtf3D(int size, int sampleRate);
+        ~hrtf3D();
         void feed(float sample);
-        void getSample(float& sampleL, float& sampleR, int azimuth);
+        void getSample(float& sampleL, float& sampleR, int index);
+        int getElev(int index);
+        int getAzimuth(int index);
     
     private:
         vector<float> splitString(string& input, char delimiter);

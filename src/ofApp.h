@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "soundEffects/hrtf2D.hpp"
+#include "soundEffects/hrtf3D.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -18,7 +19,7 @@ class ofApp : public ofBaseApp{
         int bpm;
         int bufferSize;
         int sampleRate;
-        float azimuth;
+        float hrtfDataIndex;
     
         bool hrtfOn;
 
@@ -35,8 +36,10 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         hrtf2D* myHrtf2D;
+        hrtf3D* myHrtf3D;
     private:
         ofBoxPrimitive soundSource;
         ofSpherePrimitive microphone;
-        ofCamera cam;
+        // ofCamera cam;
+        ofEasyCam cam;
 };

@@ -9,7 +9,6 @@ void ofApp::setup(){
     // audio setting
     bufferSize = BUFFERSIZE;
     sampleRate = SAMPLERATE;
-    azimuth = 0;
     
     inputBuffer.resize(bufferSize);
     ofSoundStreamSettings soundSettings;
@@ -22,7 +21,9 @@ void ofApp::setup(){
     sound_stream.setup(soundSettings);
     
     
-    myHrtf2D = new hrtf2D(512, sampleRate);
+    // myHrtf2D = new hrtf2D(512, sampleRate);
+    myHrtf3D = new hrtf3D(512, sampleRate);
+    hrtfDataIndex = 0;
     hrtfOn = true;
     
     // 立方体
@@ -53,7 +54,9 @@ void ofApp::draw(){
     // 立方体
     soundSource.draw();
     // 球
-    microphone.setPosition(200 * sin(M_PI * azimuth / 180), 200 * cos(M_PI * azimuth / 180), 0);
+    int azimuth = myHrtf3D->getAzimuth((int)hrtfDataIndex);
+    int elev = myHrtf3D->getElev((int)hrtfDataIndex);
+    microphone.setPosition(200 * sin(M_PI * azimuth / 180.), 200 * cos(M_PI * azimuth / 180.), 200 * sin(M_PI * elev / 180.));
     microphone.drawWireframe();
     // 円(球の軌道)
     ofNoFill();
@@ -72,8 +75,8 @@ void ofApp::audioIn(ofSoundBuffer &buffer){
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &buffer){
     const int frames = buffer.getNumFrames();
-    azimuth += 0.5;
-    if(azimuth>360){azimuth=0;}
+    hrtfDataIndex += 0.01;
+    
     for(int i = 0; i < frames; i++){
         const int channels = buffer.getNumChannels();
         float currentSample = inputBuffer[i];
@@ -82,8 +85,8 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
         float currentSampleR = currentSample;
         if (hrtfOn) {
             // inputの音をそのまま保持用バッファにいれる
-            myHrtf2D->feed(currentSample);
-            myHrtf2D->getSample(currentSampleL, currentSampleR, (int)azimuth);
+            myHrtf3D->feed(currentSample);
+            myHrtf3D->getSample(currentSampleL, currentSampleR, (int)hrtfDataIndex);
         }
         buffer[i*channels+0] = currentSampleL;
         buffer[i*channels+1] = currentSampleR;

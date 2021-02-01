@@ -1,5 +1,5 @@
 //
-//  hrtf.cpp
+//  hrtf2D.cpp
 //  oFHRTF
 //
 //  Created by keita miyano on 2021/01/17.
@@ -7,11 +7,11 @@
 
 #include "soundEffects/hrtf2D.hpp"
 
-hrtf2D::hrtf2D(int _size, int _sampleRate) {
+hrtf2D::hrtf2D(int size, int sampleRate) {
     //! サンプルレート
-    sampleRate = _sampleRate;
+    this->sampleRate = sampleRate;
     //! 保持されている音のサンプルサイズ
-    size = _size;
+    this->size = size;
     //! バッファ
     buffer.resize(size);
     for (int i = 0; i < buffer.size(); i++) {
@@ -42,7 +42,7 @@ hrtf2D::hrtf2D(int _size, int _sampleRate) {
 
 }
 
-float hrtf2D::getSample(float& sampleL, float& sampleR, int azimuth) {
+void hrtf2D::getSample(float& sampleL, float& sampleR, int azimuth) {
     int index = azimuth / 5;
     if (index == 72) { index = 0; }
     float delayTime; // 単位はms
