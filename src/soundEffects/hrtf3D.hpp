@@ -19,12 +19,15 @@ class hrtf3D {
         int originalSamplePoint;
         vector<vector<float>> hrtfValuesL;
         vector<vector<float>> hrtfValuesR;
+        vector<float> mainHrtfValueL;
+        vector<float> mainHrtfValueR;
         vector<int> elevs;
         vector<int> azimuths;
         hrtf3D(int size, int sampleRate);
         ~hrtf3D();
         void feed(float sample);
         void getSample(float& sampleL, float& sampleR, int index);
+        void getMainSample(float& sampleL, float& sampleR);
         int getElev(int index);
         int getAzimuth(int index);
     

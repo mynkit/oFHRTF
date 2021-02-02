@@ -43,4 +43,6 @@ class ofApp : public ofBaseApp{
         ofSpherePrimitive microphone;
         // ofCamera cam;
         ofEasyCam cam;
+        ofFile myTextFileL;
+        ofFile myTextFileR;
 };

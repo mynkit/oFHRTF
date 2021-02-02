@@ -44,9 +44,34 @@ hrtf3D::hrtf3D(int size, int sampleRate) {
             hrtfValuesR[i].resize(size);
             elevs[i] = elev;
             azimuths[i] = azimuth;
+            // cout << "index: " << i << ", elev: " << elev << ", azimuth: " << azimuth << endl;
             i++;
         }
     }
+    // メインの音として重ね合わせた音を使う
+    mainHrtfValueL.resize(size);
+    mainHrtfValueR.resize(size);
+    std::string filePath30L = "hrtfs/elev" + to_string(0) + "/L0e" + "030" + "a.dat";
+    std::string filePath30R = "hrtfs/elev" + to_string(0) + "/R0e" + "030" + "a.dat";
+    std::string filePath330L = "hrtfs/elev" + to_string(0) + "/L0e" + "330" + "a.dat";
+    std::string filePath330R = "hrtfs/elev" + to_string(0) + "/R0e" + "330" + "a.dat";
+    ofBuffer fileBuffer30L = ofBufferFromFile(filePath30L);
+    ofBuffer fileBuffer30R = ofBufferFromFile(filePath30R);
+    ofBuffer fileBuffer330L = ofBufferFromFile(filePath330L);
+    ofBuffer fileBuffer330R = ofBufferFromFile(filePath330R);
+    string _text30L = fileBuffer30L.getText();
+    string _text30R = fileBuffer30R.getText();
+    mainHrtfValueL = splitString(_text30L, '\n');
+    mainHrtfValueR = splitString(_text30R, '\n');
+    string _text330L = fileBuffer330L.getText();
+    string _text330R = fileBuffer330R.getText();
+    vector<float> _v330L = splitString(_text330L, '\n');
+    vector<float> _v330R = splitString(_text330R, '\n');
+    for (int j=0; j<size; j++) {
+        mainHrtfValueL[j] += _v330L[j];
+        mainHrtfValueR[j] += _v330R[j];
+    }
+    
 }
 
 void hrtf3D::getSample(float& sampleL, float& sampleR, int index) {
@@ -63,6 +88,20 @@ void hrtf3D::getSample(float& sampleL, float& sampleR, int index) {
         if(point >= size){point -= size;}
         sampleL += buffer[point] * hrtfValuesL[index][i] * 5.; // 音が原音に比べて小さすぎるので5倍する
         sampleR += buffer[point] * hrtfValuesR[index][i] * 5.; // 音が原音に比べて小さすぎるので5倍する
+    }
+}
+
+void hrtf3D::getMainSample(float& sampleL, float& sampleR) {
+    float delayTime; // 単位はms
+    int point;
+    sampleL = 0.;
+    sampleR = 0.;
+    for (int i = 0; i < size; i++) {
+        delayTime = i * 1000. / 44100.;
+        point = originalSamplePoint + size - (delayTime*0.001*sampleRate) - 1;
+        if(point >= size){point -= size;}
+        sampleL += buffer[point] * mainHrtfValueL[i] * 5.; // 音が原音に比べて小さすぎるので5倍する
+        sampleR += buffer[point] * mainHrtfValueR[i] * 5.;
     }
 }
 

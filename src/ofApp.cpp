@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-#define BUFFERSIZE 256; // バッファサイズ(256推奨．大きくすると処理に余裕はでるが遅延が長くなる)
+#define BUFFERSIZE 512; // バッファサイズ(256推奨．大きくすると処理に余裕はでるが遅延が長くなる)
 #define SAMPLERATE 44100; // サンプルレート(Hz)
 
 //--------------------------------------------------------------
@@ -25,7 +25,7 @@ void ofApp::setup(){
     myHrtf3D = new hrtf3D(512, sampleRate);
     hrtfDataIndex = 0;
     index = 0.;
-    hrtfOn = true;
+    hrtfOn = false;
     
     // 立方体
     soundSource.set(50);
@@ -40,6 +40,9 @@ void ofApp::setup(){
     cam.setPosition(cameraPositionX, cameraPositionY, cameraPositionZ);
     cam.lookAt(ofVec3f(-cameraPositionX, -cameraPositionY, -cameraPositionZ), ofVec3f(0, 0, 1));
     
+    // textファイル保存
+    //myTextFileL.open("sound_outL.txt",ofFile::WriteOnly);
+    //myTextFileR.open("sound_outR.txt",ofFile::WriteOnly);
 }
 
 //--------------------------------------------------------------
@@ -56,10 +59,12 @@ void ofApp::draw(){
     // 立方体
     soundSource.draw();
     // 球
-    int azimuth = myHrtf3D->getAzimuth((int)hrtfDataIndex);
-    int elev = myHrtf3D->getElev((int)hrtfDataIndex);
-    microphone.setPosition(200 * sin(M_PI * azimuth / 180.), 200 * cos(M_PI * azimuth / 180.), 200 * sin(M_PI * elev / 180.));
-    microphone.drawWireframe();
+    if (hrtfOn) {
+        int azimuth = myHrtf3D->getAzimuth((int)hrtfDataIndex);
+        int elev = myHrtf3D->getElev((int)hrtfDataIndex);
+        microphone.setPosition(200 * sin(M_PI * azimuth / 180.), 200 * cos(M_PI * azimuth / 180.), 200 * sin(M_PI * elev / 180.));
+        microphone.drawWireframe();
+    }
     // 円(球の軌道)
     ofNoFill();
     ofDrawCircle(0, 0, 0, 200);
@@ -77,9 +82,9 @@ void ofApp::audioIn(ofSoundBuffer &buffer){
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &buffer){
     const int frames = buffer.getNumFrames();
-    index += 0.01;
+    index += 0.03;
     if(index>10){index=0;}
-    if (index - (int)index < 0.01) {
+    if (index - (int)index < 0.03) {
         // indexが整数になるタイミングでhrtfDataIndexを0~76のどれか(乱数)にする
         hrtfDataIndex = ofRandom(0, 76);
     }
@@ -88,15 +93,23 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
         const int channels = buffer.getNumChannels();
         float currentSample = inputBuffer[i];
         
-        float currentSampleL = currentSample;
-        float currentSampleR = currentSample;
         if (hrtfOn) {
+            float L = 0;
+            float R = 0;
             // inputの音をそのまま保持用バッファにいれる
             myHrtf3D->feed(currentSample);
-            myHrtf3D->getSample(currentSampleL, currentSampleR, hrtfDataIndex);
+            myHrtf3D->getSample(L, R, hrtfDataIndex);
+            //myHrtf3D->getMainSample(L, R);
+            buffer[i*channels+0] = L;
+            buffer[i*channels+1] = R;
+            //myTextFileL << L << ",";
+            //myTextFileR << R << ",";
+        } else {
+            //myTextFileL << currentSample << ",";
+            //myTextFileR << currentSample << ",";
+            buffer[i*channels+0] = currentSample;
+            buffer[i*channels+1] = currentSample;
         }
-        buffer[i*channels+0] = currentSampleL;
-        buffer[i*channels+1] = currentSampleR;
     }
 }
 
